@@ -20,7 +20,7 @@ def main():
 
     print(diffs[1] * diffs[3])
 
-    print(count_solutions(sorted_input))
+    print(count_solutions(sorted_input, 0))
 
 
 def calc_differences(sorted_input):
@@ -39,7 +39,8 @@ def calc_differences(sorted_input):
     print(diffs)
     return diffs
 
-def count_solutions(sorted_input, start=0):
+
+def count_solutions(sorted_input, start):
     prev = start
     count = 0
 
@@ -53,12 +54,22 @@ def count_solutions(sorted_input, start=0):
 
         if next - prev <= 3:
             # we can skip this adapter
-            count += count_solutions(sorted_input[i+1:], prev)
+            count += cached_count_solutions(sorted_input[i+1:], prev)
 
         prev = adapter
     
     count += 1
     return count
+
+cache = {}
+def cached_count_solutions(sorted_input, start):
+    key = str(sorted_input) + str(start)
+    
+    if key not in cache:
+        cache[key] = count_solutions(sorted_input, start)
+        
+    return cache[key]
+
 
 
 if __name__ == '__main__':
